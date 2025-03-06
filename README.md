@@ -1,2 +1,2 @@
-# Inform-tica-Industrial
+# Informatica-Industrial
 Trabalho - Guilherme Marcio
