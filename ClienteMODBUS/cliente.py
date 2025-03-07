@@ -72,7 +72,7 @@ class ClienteMODBUS():
         leitura = self.cliente.read_holding_registers(addr, 1)[0]
         lista_bits = [int(x) for x in "{0:016b}".format(leitura)]
         # Imprime todas as posições com seus respectivos índices (começando em 1)
-        return lista_bits
+        return lista_bits[::-1]
     
     def readInt(self,addr):
         """
