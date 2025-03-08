@@ -26,7 +26,11 @@ class ServidorMODBUS():
             self._server.start()
             print("Servidor MODBUS em execução")
             while True:
-                self._db.set_holding_registers(716,[random.randrange(int(0.95*400),int(1.05*400))])
+                # Gerar 8 bits aleatórios (0 ou 1)
+                bits = [random.randint(0, 1) for _ in range(8)]
+                # Converter os bits para um valor inteiro (0-255)
+                valor_inteiro = sum(bit << i for i, bit in enumerate(bits))
+                self._db.set_holding_registers(716, [valor_inteiro])
                 #Lista: bit0 - Sensor de Reservatório Superior Nível Alto (Ativo = 1)
                 #Lista: bit1 - Sensor de Reservatório Superior Nível Baixo (Ativo = 0)
                 #Lista: bit2 - Sensor de Reservatório Inferior Nível Alto (Ativo = 1)
