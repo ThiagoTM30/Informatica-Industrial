@@ -1,0 +1,49 @@
+#:kivy 1.11.1
+
+<MainWidget>:
+    orientation: 'vertical'
+    canvas:
+        Color:
+            rgb: 0.5,0.5,0.5
+        Rectangle:
+            size: self.size
+    BoxLayout:
+        orientation:'horizontal'
+        size_hint: (1,0.1)
+        spacing: 10
+        Label:
+            text: 'Supervisório Bomba Hidraulica'
+            size_hint_x: None
+            width: 400  #largura do texto
+        BoxLayout:
+            orientation:'vertical'
+            size_hint_x: None
+            width: 500  
+            Label: 
+                text: 'Configurações'
+            BoxLayout:
+                orientation:'horizontal'
+                Button:
+                    text: 'MODBUS'
+                Button:
+                    text: 'Scan Time' #tempo de varredura
+        Image:
+        #imagem de conexao estabelecida
+            id: img_con
+            size_hint_x: None
+            width: 80 #largura em pixels
+            source: '../imgs/desconectado.png'
+            pos_hint: {'top':1, 'right':1}
+
+    FloatLayout:
+    #imagem da simulaçao da bomba
+        canvas:
+            Color:
+                rgb: 1,1,1
+            Rectangle:
+                size: self.size
+
+        Image:
+            source: '../imgs/bomba.png' #olhar certinho se os nomes batem
+        #Label:
+           # id:
