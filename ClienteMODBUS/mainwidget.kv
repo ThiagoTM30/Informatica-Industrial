@@ -39,11 +39,55 @@
     #imagem da simulaçao da bomba
         canvas:
             Color:
-                rgb: 1,1,1
+                rgba: 1,1,1,0.8
             Rectangle:
                 size: self.size
 
         Image:
             source: '../imgs/bomba.png' #olhar certinho se os nomes batem
-        #Label:
-           # id:
+        
+        Label:
+            id: pressao #PIT-01
+            text:'-.-'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.331,'y':0.15} #variam de -0.5 ate 0.5
+            color: 0,0,0,1
+
+        Label:
+            id: vazao #FIT-01
+            text:'0.30 m³/h'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':0.085,'y':0.193} #variam de -0.5 ate 0.5
+            color: 0,0,0
+
+        Label:
+            id: nivel #LIT-01
+            text:'-.-%'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':0.386,'y':0.345} #variam de -0.5 ate 0.5
+            color: 0,0,0
+        
+        Label:
+            id: rot_rpm #Rotação
+            text:'-.-\nRPM'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.336,'y':-0.375} #variam de -0.5 ate 0.5
+            color: 0,0,0
+        
+        Label:
+            id: torque #Torque
+            text:'-.-\nN/m'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.436,'y':-0.375} #variam de -0.5 ate 0.5
+            color: 0,0,0
+       
