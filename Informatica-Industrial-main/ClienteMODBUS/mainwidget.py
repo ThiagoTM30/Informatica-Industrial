@@ -10,6 +10,8 @@ from pymodbus.constants import Endian
 from datetime import datetime
 from timeseriesgraph import TimeSeriesGraph
 
+#teste
+
 class MainWidget(BoxLayout):
     """
     widget principal
@@ -39,7 +41,7 @@ class MainWidget(BoxLayout):
                 plot_color = (random.random(), random.random(), random.random(), 1)            
             self._tags[key] = value.copy() #Cria uma cópia do dicionário original e adiciona a chave 'color'
             self._tags[key]['color'] = plot_color
-        self._graph = DataGraphPopup(self._max_points,self._tags['torque']['color'])
+        self._graph = DataGraphPopup(self._max_points,self._tags)
     
     def startDataRead(self, ip, port):
         """
@@ -58,7 +60,7 @@ class MainWidget(BoxLayout):
             if self._modbusClient.is_open:
                 self._updateThread = Thread(target=self.updater)
                 self._updateThread.start()
-                self.ids.img_con.source = '../imgs/conectado.png'
+                self.ids.img_con.source = 'imgs/conectado.png'
                 self._modbusPopup.dismiss()
             else:
               self._modbusPopup.setInfo("Falha na conexão com o servidor")
@@ -127,8 +129,20 @@ class MainWidget(BoxLayout):
                 valor = round(self._meas['values'][key], 2)  # Limita a 2 casas decimais
                 self.ids[key].text = str(valor)
 
-        #Atualição do Grafico
-        self._graph.ids.graph.updateGraph((self._meas['timestamp'],self._meas['values']['torque']),0)        
+        # Atualização do gráfico com a variável selecionada
+        current_var = self._graph.current_variable
+        if current_var in self._meas['values']:
+            raw_value = self._meas['values'][current_var]
+            scaled_value = raw_value / self._tags[current_var]['mult']  # Remove o multiplicador para plotagem
+            self._graph.ids.graph.updateGraph((self._meas['timestamp'], scaled_value), 0)
+
+        # Atualizar popup de sensores
+        if hasattr(self._graph, 'sensor_popup') and self._graph.sensor_popup:
+            try:
+                sensor_values = self._meas['values'].get('sensores', [0]*16)
+                self._graph.sensor_popup.update_states(sensor_values)
+            except Exception as e:
+                print(f"Erro ao atualizar sensores: {str(e)}")       
 
     def stopRefresh(self):
         self._updateWidgets = False

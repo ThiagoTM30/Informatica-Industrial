@@ -119,3 +119,10 @@ class TimeSeriesGraph(Graph):
                 self.plots[plot_number].points = self.plots[plot_number].points[-self._max_points:]                
         except Exception as e:
             print(e.args)
+
+    def reset_data(self):
+        self._timestamps = []
+        self._numMeds = -1
+        self.clearPlots()
+        self.xmin = 0
+        self.xmax = self._max_points        
