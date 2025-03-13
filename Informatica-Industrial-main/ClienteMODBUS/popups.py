@@ -2,7 +2,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy_garden.graph import LinePlot
 from kivy.uix.boxlayout import BoxLayout
-
+from kivy.uix.button import Button
 #teste
 
 class ModbusPopup(Popup):
@@ -83,48 +83,45 @@ class SensorPopup(Popup):
         self._create_sensor_grid()
         
     def _create_sensor_grid(self):
-        sensor_names = [
-            "Reserv. Sup. Nível Alto (Ativo=1)",
-            "Reserv. Sup. Nível Baixo (Ativo=0)",
-            "Reserv. Inf. Nível Alto (Ativo=1)",
-            "Reserv. Inf. Nível Baixo (Ativo=0)",
-            "Indicador Nível Muito Alto",
-            "Válvula XP-01",
-            "Válvula XP-02",
-            "Indicador Nível Muito Alto",
-            "Bit 8", "Bit 9", "Bit 10", "Bit 11",  # Complete com nomes reais
-            "Bit 12", "Bit 13", "Bit 14", "Bit 15"
-        ]
-        
-        grid = self.ids.sensor_grid
-        for name in sensor_names:
-            box = BoxLayout(orientation='horizontal', 
-                          size_hint_y=None, 
-                          height=40,
-                          padding=5)
+      sensor_names = [
+          "Reserv. Sup. Nível Alto (Ativo=1)",
+          "Reserv. Sup. Nível Baixo (Ativo=0)",
+          "Reserv. Inf. Nível Alto (Ativo=1)",
+          "Reserv. Inf. Nível Baixo (Ativo=0)",
+          "Indicador Nível Muito Alto",
+          "Válvula XP-01",
+          "Válvula XP-02",
+          "Indicador Nível Muito Alto",
+          "Bit 8", "Bit 9", "Bit 10", "Bit 11",
+          "Bit 12", "Bit 13", "Bit 14", "Bit 15"
+      ]
+      
+      grid = self.ids.sensor_grid
+      
+      for name in sensor_names:
+          box = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, padding=5)
 
-            lbl_name = Label(text=name, 
-                           halign='left', 
-                           size_hint_x=0.7,
-                           text_size=(None, None),
-                           markup=True)
-            
-            lbl_state = Label(text='[b]INATIVO[/b]', 
-                            color=(1,1,1,1),
+          lbl_name = Label(text=name, halign='left', size_hint_x=0.7, text_size=(None, None), markup=True)
+
+          btn_state = Button(text='[b]INATIVO[/b]', 
+                            background_color=(0.85, 0.35, 0.35, 1),  # Vermelho inicial (inativo)
                             size_hint_x=0.3,
                             markup=True)
-            self.sensor_states[name] = lbl_state
-            
-            box.add_widget(lbl_name)
-            box.add_widget(lbl_state)
-            grid.add_widget(box)
+          
+          self.sensor_states[name] = btn_state
+
+          box.add_widget(lbl_name)
+          box.add_widget(btn_state)
+          grid.add_widget(box)
 
     def update_states(self, states):
-        colors = {
-            1: (0.35, 0.75, 0.35, 1),  # Verde
-            0: (0.85, 0.35, 0.35, 1)    # Vermelho
-        }
-        states = states[:16]  # Pega todos os 16 bits
-        for (name, lbl), state in zip(self.sensor_states.items(), states):
-            lbl.text = '[b]ATIVO[/b]' if state else '[b]INATIVO[/b]'
-            lbl.background_color = colors[state]
+      colors = {
+          1: (0.35, 0.75, 0.35, 1),  # Verde (ATIVO)
+          0: (0.85, 0.35, 0.35, 1)   # Vermelho (INATIVO)
+      }
+
+      states = states[:16]  
+
+      for (name, btn), state in zip(self.sensor_states.items(), states):
+          btn.text = '[b]ATIVO[/b]' if state else '[b]INATIVO[/b]'
+          btn.background_color = colors[state]  # Alterando a cor corretamente
