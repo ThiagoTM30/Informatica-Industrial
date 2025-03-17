@@ -90,4 +90,10 @@
             halign: 'center'
             pos_hint: {'x':-0.436,'y':-0.375} #variam de -0.5 ate 0.5
             color: 0,0,0
+        Button:
+            size_hint: (None, None)
+            text: 'Atuação'
+            size: (200, 58)
+            pos_hint: {'x': 0.75, 'y': 0}  # 40% da largura e 50% da altura do layout pai
+            on_release: root._atuacaoPopup.open()
        
