@@ -46,15 +46,15 @@
                 size: self.size
 
         Image:
-            source: '../imgs/bomba.png' #olhar certinho se os nomes batem
-        
+            source: '../imgs/bomba.png' #olhar certinho se os nomes batem  
+
         Label: #PIT-01(Pressão)
             id: pressao 
             text:'-.-'
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':-0.331,'y':0.15} #variam de -0.5 ate 0.5
+            pos_hint: {'x':-0.331,'y':0.138} #variam de -0.5 ate 0.5
             color: 0,0,0,1
 
         Label: #PIT-01(Pressão) Auxiliar
@@ -63,8 +63,32 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':-0.276,'y':0.15} #variam de -0.5 ate 0.5
-            color: 0,0,0,1            
+            pos_hint: {'x':-0.276,'y':0.138} #variam de -0.5 ate 0.5
+
+        Label: #Nivel dinâmico Pressao
+            id: lb_pressao
+            size_hint:(None,None)
+            size: (85,20)
+            pos_hint:{'x':0.085,'y':0.516} #posiçao na tela
+            canvas:
+                Color:
+                    rgb: 1,0,0
+                Rectangle:
+                    size: self.size
+                    pos: (127,400) #calcular a posicao central do label
+        Image:
+            id: regua
+            source: '../imgs/regua.png'
+            size_hint: 0.17,0.17
+            pos_hint: lb_pressao.pos_hint
+            color: 0,0,0,1   
+        Button: #Gráfico Pressão
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: '../imgs/graph_icon.jpg'
+            background_down: '../imgs/graph_icon.jpg'
+            pos_hint: {'x':0.22,'y':0.56}  # Posição ajustada para não sobrepor
+            on_release: root._pressao_graph.open()        
 
         Label: #FIT-01(Vazão)
             id: vazao 
@@ -72,7 +96,7 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':0.085,'y':0.193} #variam de -0.5 ate 0.5
+            pos_hint: {'x':-0.032,'y':0.172} #variam de -0.5 ate 0.5
             color: 0,0,0
 
         Label: #FIT-01(Vazão) Auxiliar
@@ -81,9 +105,33 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':0.130,'y':0.193} #variam de -0.5 ate 0.5
+            pos_hint: {'x':0.01,'y':0.172} #variam de -0.5 ate 0.5
             color: 0,0,0
 
+        Label: #Nivel dinâmico Vazao
+            id: lb_vazao
+            size_hint:(None,None)
+            size: (85,20)
+            pos_hint:{'x':0.386,'y':0.545} #posiçao na tela
+            canvas:
+                Color:
+                    rgb: 1,0,0
+                Rectangle:
+                    size: self.size
+                    pos: (428,420) #calcular a posicao central do label
+        Image:
+            id: regua
+            source: '../imgs/regua.png'
+            size_hint: 0.17,0.17
+            pos_hint: lb_vazao.pos_hint
+        Button: #Gráfico Vazão
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: '../imgs/graph_icon.jpg'
+            background_down: '../imgs/graph_icon.jpg'
+            pos_hint: {'x':0.52,'y':0.59}  # Posição ajustada para não sobrepor
+            on_release: root._vazao_graph.open()
+        
 
         Label: #LIT-01(Nível)
             id: nivel 
@@ -91,7 +139,7 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':0.386,'y':0.347} #variam de -0.5 ate 0.5
+            pos_hint: {'x':0.384,'y':0.334} #variam de -0.5 ate 0.5
             color: 0,0,0
 
         Label: #LIT-01(Nível) Auxiliar
@@ -100,8 +148,27 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':0.416,'y':0.347} #variam de -0.5 ate 0.5
+            pos_hint: {'x':0.412,'y':0.334} #variam de -0.5 ate 0.5
             color: 0,0,0
+        
+        Label: #Nivel dinâmico
+            id: lb_nivel
+            size_hint:(None,None)
+            size: (16,50)
+            pos_hint:{'x':0.912,'y':0.698} #posiçao na tela
+            canvas:
+                Color:
+                    rgb: 0,0,1
+                Rectangle:
+                    size: self.size
+                    pos: (self.pos[0]+self.width*1,self.pos[1]) #calcular a posicao central do label
+        Button: #Gráfico Nível
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: '../imgs/graph_icon.jpg'
+            background_down: '../imgs/graph_icon.jpg'
+            pos_hint: {'x':0.8,'y':0.81}  # Posição ajustada para não sobrepor
+            on_release: root._nivel_graph.open()
 
         Label: #Rotação
             id: rot_rpm 
@@ -109,7 +176,7 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':-0.336,'y':-0.366} #variam de -0.5 ate 0.5
+            pos_hint: {'x':-0.336,'y':-0.372} #variam de -0.5 ate 0.5
             color: 0,0,0
         Label: #Rotação Auxiliar
             id: rot_rpm_aux
@@ -117,15 +184,22 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':-0.336,'y':-0.376} #variam de -0.5 ate 0.5
+            pos_hint: {'x':-0.336,'y':-0.382} #variam de -0.5 ate 0.5
             color: 0,0,0
+        Button: #Gráfico RPM
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: '../imgs/graph_icon.jpg'
+            background_down: '../imgs/graph_icon.jpg'
+            pos_hint: {'x':0.14,'y':0.02}  # Posição ajustada para não sobrepor
+            on_release: root._rot_rpm_graph.open()
         Label: #Torque
             id: torque 
             text:'-.-'
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':-0.436,'y':-0.366} #variam de -0.5 ate 0.5
+            pos_hint: {'x':-0.436,'y':-0.372} #variam de -0.5 ate 0.5
             color: 0,0,0
         Label: #Torque Auxiliar
             id: torque_aux
@@ -133,6 +207,86 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':-0.436,'y':-0.376} #variam de -0.5 ate 0.5
-            color: 0,0,0        
-       
+            pos_hint: {'x':-0.436,'y':-0.382} #variam de -0.5 ate 0.5
+            color: 0,0,0  
+        Button: #Gráfico Torque
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: '../imgs/graph_icon.jpg'
+            background_down: '../imgs/graph_icon.jpg'
+            pos_hint: {'x':0.045,'y':0.02}  # Posição ajustada para não sobrepor
+            on_release: root._torque_graph.open()        
+        
+        BoxLayout: #Controle do acionamento
+            orientation:'horizontal'
+            size_hint: (None, None)
+            size:(250,40)
+            pos_hint: {'x': 0, 'y': 0.32}
+            Button:
+                text:'LIGA'
+                on_release:
+                    root.ligaMotor(app.root._addrPartida)
+            Button:
+                text:'DESLIGA'
+                on_release:
+                    root.desligaMotor(app.root._addrPartida)
+            Button:
+                size_hint: (0.3,1)
+                size: 30,30
+                on_release: root._atuacaoPopup.open()
+                Image:
+                    source: '../imgs/engrenagem.png'
+                    size_hint: None, None
+                    size: 25, 25
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+        
+        Label: #Visor de seleção do motor
+            id: visor_part
+            text: '-.-'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x': -0.385, 'y': -0.2} #variam de -0.5 ate 0.5
+            color: 0,0,0,1
+        
+        BoxAlerta: #Alerta de vazão
+            id: alerta_vazao
+            pos: (563, 446)
+        BoxAlerta: #Alerta de pressão 
+            id: alerta_pressao
+            pos: (268, 425)
+        BoxAlerta: #Alerta de nível
+            id: alerta_nivel
+            pos: (940, 559)
+        BoxAlerta: #Alerta de torque
+            id: alerta_torque
+            pos: (53, 120)
+        BoxAlerta: #Alerta de RPM
+            id: alerta_rot_rpm
+            pos: (150, 120)
+        
+        Button: #Dados Históricos
+            size_hint: (None, None)
+            text: 'Consultar Dados Históricos'
+            size: (250, 58)
+            pos_hint: {'x': 0.75, 'y': 0}
+            on_release: root._queryPopup.open() 
+        
+        Button: #Dados das variáveis
+            size_hint: (None, None)
+            text: 'Dados Todas Variaveis'
+            size: (250, 58)
+            pos_hint: {'x': 0.75, 'y': 0.09}  # 40% da largura e 50% da altura do layout pai
+            on_release: root._graph.open() 
+
+
+<BoxAlerta@BoxLayout>:
+    size_hint: (None, None)
+    size: (25, 25)
+    corAlerta: (1, 0, 0, 1)  # Defina um valor padrão ou deixe ele ser alterado pelo Python
+    canvas:
+        Color:
+            rgba: root.corAlerta  # A cor será acessada aqui
+        Triangle:
+            points: [self.pos[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0]/2, self.pos[1] + self.size[1]]
