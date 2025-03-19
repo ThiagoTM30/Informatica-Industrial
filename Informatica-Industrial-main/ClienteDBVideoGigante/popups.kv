@@ -1,0 +1,279 @@
+#:kivy 1.11.1
+<ModbusPopup>:
+    title:"Configurações MODBUS"
+    size_hint_y: None
+    size_hint_x: 0.4
+    height:200
+    BoxLayout:
+        id: layout
+        orientation:'vertical'
+        GridLayout:
+            cols:2
+            rows:2
+            Label:
+                text: "IP"
+                font_size: 14
+            TextInput:
+                id: txt_ip
+                text:"127.0.0.1"
+                font_size: 14
+                halign:'center'
+                valign: 'middle'
+            Label:
+                text: "Porta"
+                font_size: 14
+            TextInput:
+                id: txt_porta
+                text:"502"
+                font_size: 14
+                halign:'center'
+                valign: 'middle'
+        BoxLayout:
+            orientation:'horizontal'
+            Button:
+                size_hint_y: None
+                height: 40
+                text: "Conectar"
+                on_release:
+                    root.clearInfo()
+                    app.root.startDataRead(txt_ip.text, int(txt_porta.text))
+            Button:
+                size_hint_y: None
+                height: 40
+                text: "Fechar"
+                on_release:
+                    root.dismiss()
+                    root.clearInfo()
+<ScanPopup>:
+    title:"Configurações ScanTime"
+    size_hint_y: None
+    size_hint_x: 0.4
+    height:150
+    BoxLayout:
+        id: layout
+        orientation:'vertical'
+        GridLayout:
+            cols:2
+            rows:1
+            Label:
+                text: "ScanTime[ms]"
+                font_size: 14
+            TextInput:
+                id: txt_st
+                font_size: 14
+                halign:'center'
+                valign: 'middle'
+        BoxLayout:
+            orientation:'horizontal'
+            Button:
+                size_hint_y: None
+                height: 40
+                text: "Configurar"
+                on_release:
+                    app.root._scan_time = int(txt_st.text)
+            Button:
+                size_hint_y: None
+                height: 40
+                text: "Fechar"
+                on_release:
+                    root.dismiss()
+<AtuacaoPopup>:
+    title: "Atuação e controle na planta"
+    size_hint_y: 1
+    size_hint_x: 1
+    height: 200
+    BoxLayout:
+        id: partidas
+        orientation: 'vertical'
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint: (1,0.1)
+            CheckBox:
+                on_active: root.on_checkbox_active(self, self.active)
+            Label:
+                text: "PARTIDA DIRETA"
+    
+            CheckBox:
+                on_active: root.on_checkbox_active(self, self.active)
+
+            Label:
+                text: "SOFT START"
+
+            CheckBox:
+                on_active: root.on_checkbox_active(self, self.active)
+            Label:
+                text: "INVERSOR"
+        
+        BoxLayout:
+            orientation:'vertical'
+            id: partidas
+            size_hint: (1,0.8)
+            Button:
+                text: "LIGA"
+                on_release:
+                    root.dismiss()
+            Button:
+                text: "DESLIGA"
+                on_release:
+                    root.dismiss()
+            Button:
+                text: "RESET"
+                on_release:
+                    root.dismiss()
+
+        GridLayout:
+            cols:4
+            size_hint: (1,0.1)
+            Label:
+                text: "ACELERAÇÃO"
+            TextInput:
+                font_size: 14
+                halign:'center'
+                valign: 'middle'    
+        
+            Label:
+                text: "DESACELERAÇÃO"
+            TextInput:
+                id: txt_st
+                font_size: 14
+                halign:'center'
+                valign: 'middle'
+        BoxLayout:
+            size_hint: (1,0.1)
+            canvas:
+                Color:
+                    rgb: 1,0,0
+            Button:
+              
+                text: "FECHAR"
+                on_release:
+                    root.dismiss()
+                
+<DataGraphPopup>
+    title: root.title
+    BoxLayout:
+        orientation:'vertical'
+        TimeSeriesGraph:
+            id: graph
+            xlabel: 'Horario'
+            ylabel: root.ylabel
+            background_color: 0.5,0.5,0.5,0.5
+            x_ticks_minor: 1
+            x_ticks_major: 5
+            y_grid_label: True
+            x_grid_label: True
+            padding: 5
+            x_grid: True
+            y_grid: True
+            xmin : 0 
+            ymin : 0
+
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint: (1,0.05)
+            BoxLayout:
+                orientation:'horizontal'
+                size_hint: (0.5,1)
+                Label:
+                    size_hint: (0.3,1)
+                    text: "Numero de pontos do grafico"
+                LabeledCheckBoxDataGraph:
+                    id: mp20
+                    graph_reference: root
+                    on_kv_post:
+                        self.ids.label.text = '20'
+                        self.ids.checkbox.group = 'cb_group'
+                        self.ids.checkbox.active = True
+                LabeledCheckBoxDataGraph:
+                    id: mp50
+                    graph_reference: root
+                    on_kv_post:
+                        self.ids.label.text = '50'
+                        self.ids.checkbox.group = 'cb_group'
+                LabeledCheckBoxDataGraph:
+                    id: mp100
+                    graph_reference: root
+                    on_kv_post:
+                        self.ids.label.text = '100'
+                        self.ids.checkbox.group = 'cb_group'                
+            Button:
+                text: "Fechar"
+                background_color: 1,0,0,1
+                size_hint:(0.1,1)
+                on_release: root.dismiss()
+
+
+<LabeledCheckBoxDataGraph>:
+    orientation:'horizontal'
+    size_hint: (0.1,1)
+    CheckBox:
+        id: checkbox
+        on_active: 
+            root.graph_reference.ids.graph.setMaxPoints(int(label.text),0) if root.graph_reference else None
+    Label: 
+        id: label      
+
+<HistoricalDataGraphPopup>
+    title: "Histórico de Variavéis"
+    BoxLayout:
+        orientation:'vertical'
+        TimeSeriesGraph:
+            id: graph
+            xlabel: 'Horario'
+            ylabel: ''
+            background_color: 0.5,0.5,0.5,0.5
+            x_ticks_minor: 1
+            x_ticks_major: 5
+            y_grid_label: True
+            x_grid_label: True
+            padding: 5
+            x_grid: True
+            y_grid: True
+            xmin : 0 
+            ymin : 0
+            ymax: 500
+
+        BoxLayout:
+            id: sensores
+            orientation:'horizontal'
+            size_hint: (1,0.1)
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint: (1,0.1)
+            Label:
+                text: 'Timestamp inicial \r\n [size=12] (DD/MM/AAAA HH:MM:SS)[/size]'
+                haling: 'center'
+                markup: True
+            TextInput:
+                id: txt_init_time
+                size_hint: (1,0.8)
+                halign: 'center'
+                valign: 'middle'
+                multiline: False
+            Label:
+                text: 'Timestamp final \r\n [size=12] (DD/MM/AAAA HH:MM:SS)[/size]'
+                haling: 'center'
+                markup: True                    
+            TextInput:
+                id: txt_final_time
+                size_hint: (1,0.8)
+                halign: 'center'
+                valign: 'middle'
+                multiline: False
+            Button:
+                text: "Fechar"
+                background_color: 1,0,0,1
+                size_hint:(1,0.8)
+                on_release: root.dismiss()
+
+
+<LabeledCheckBoxHistoricalDataGraph>
+    orientation:'horizontal'
+    size_hint: (0.05,1)
+    CheckBox:
+        id: checkbox
+        on_active: app.root.getDataDB()
+    Label: 
+        id: label  
+        font_size: 12
+        bold: True   

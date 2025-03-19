@@ -26,7 +26,7 @@ class ServidorMODBUS():
             self._server.start()
             print("Servidor MODBUS em execução")
             while True:
-                self._db.set_holding_registers(716,[random.randrange(int(0.95*400),int(1.05*400))])
+                self._db.set_holding_registers(716,[random.randrange(int(0),int(255))])
                 #Lista: bit0 - Sensor de Reservatório Superior Nível Alto (Ativo = 1)
                 #Lista: bit1 - Sensor de Reservatório Superior Nível Baixo (Ativo = 0)
                 #Lista: bit2 - Sensor de Reservatório Inferior Nível Alto (Ativo = 1)
@@ -36,50 +36,50 @@ class ServidorMODBUS():
                 #Lista: bit6 - Válvula XP-02
                 #Lista: bit7 - Indicador de Nível Muito Alto
                
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(700, payload)
                 #Temperatura Enrolamento R Motor
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(702, payload)
                 #Temperatura Enrolamento S Motor
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(704, payload)
                 #Temperatura Enrolamento T Motor  
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(706, payload)
                 #Temperatura Carcaça  
                
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(710, payload)
                 #Medida da Pressão PIT-01
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(712, payload)
                 #Medida da Vazão FIT-01
                 
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(714, payload)
                 #Medida do Nível do Reservatório superior (Porcentagem)
 
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(727, payload)
                 #Medida da Rotação do Motor selecionado (RPM)
-                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Big)
+                builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
                 builder.add_32bit_float(random.uniform(0.95*400, 1.05*400))
                 payload = builder.to_registers()
                 self._db.set_holding_registers(1334, payload)    
@@ -109,7 +109,7 @@ class ServidorMODBUS():
 
                
                 leitura = self._db.get_holding_registers(1334,2)
-                decoder = BinaryPayloadDecoder.fromRegisters(leitura, byteorder=Endian.Big, wordorder=Endian.Big)
+                decoder = BinaryPayloadDecoder.fromRegisters(leitura, byteorder=Endian.Big, wordorder=Endian.Little)
                
                 print("=================")
                 print("Tabela MODBUS")

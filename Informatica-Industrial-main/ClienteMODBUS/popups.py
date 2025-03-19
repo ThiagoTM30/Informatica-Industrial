@@ -52,7 +52,7 @@ class DataGraphPopup(Popup):
         self.ids.spinner.values = list(self.tags.keys())
 
     def _update_axis(self, mult):
-        self.ids.graph.ylabel = f"{self.current_variable} [x{mult}]"
+        self.ids.graph.ylabel = f"{self.current_variable} [/{mult}]"
 
     def on_spinner_select(self, selected_text):
         if selected_text in self.tags:

@@ -74,20 +74,28 @@ class MainWidget(BoxLayout):
         self._meas['timestamp'] = datetime.now()
         for key,value in self._tags.items():
             if 'float' in value and value['float'] is True:
-                self._meas['values'][key] = self.readFloat(value['addr']) * value['mult']
+                self._meas['values'][key] = self.readFloat(value['addr']) / value['mult']
             elif 'lista' in value and value['lista'] is True:
-                self._meas['values'][key] = self.readLista(value['addr']) * value['mult']
+                self._meas['values'][key] = self.readLista(value['addr'])
             else: 
-                self._meas['values'][key] = self.readInt(value['addr']) * value['mult']
+                self._meas['values'][key] = self.readInt(value['addr']) / value['mult']
         print(self._meas)
     
-    def readFloat(self,addr):
+    def readFloat(self, addr):
         """  
         Método auxiliar para a leitura de valores com ponto flutuante
         """
-        leitura = self._modbusClient.read_holding_registers (addr,2)
-        decoder = BinaryPayloadDecoder.fromRegisters(leitura, byteorder=Endian.Big, wordorder=Endian.Big)
-        return decoder.decode_32bit_float()  
+        leitura = self._modbusClient.read_holding_registers(addr, 2)
+        
+        if leitura is None:
+            print(f"Erro ao ler registradores Modbus no endereço {addr}")
+            return None
+
+        decoder = BinaryPayloadDecoder.fromRegisters(
+            leitura, byteorder=Endian.Big, wordorder=Endian.Little
+        )
+        
+        return decoder.decode_32bit_float() 
     
     def readLista(self, addr):
         """
