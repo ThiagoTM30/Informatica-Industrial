@@ -214,9 +214,26 @@
         id: label      
 
 <HistoricalDataGraphPopup>
-    title: "Histórico de Variavéis"
+    title: "Gráfico de Monitoramento Dados Históricos"
     BoxLayout:
         orientation:'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: "40dp"
+            padding: "5dp"
+            spacing: "5dp"
+            Label:
+                text: "Variável:"
+                size_hint_x: None
+                width: "60dp"
+            Spinner:
+                id: spinner
+                text: "Lista de Variaveis"
+                values: []
+                on_text: root.on_spinner_select(self.text)
+            
+
         TimeSeriesGraph:
             id: graph
             xlabel: 'Horario'
@@ -231,49 +248,65 @@
             y_grid: True
             xmin : 0 
             ymin : 0
-            ymax: 500
 
         BoxLayout:
-            id: sensores
             orientation:'horizontal'
-            size_hint: (1,0.1)
-        BoxLayout:
-            orientation:'horizontal'
-            size_hint: (1,0.1)
-            Label:
-                text: 'Timestamp inicial \r\n [size=12] (DD/MM/AAAA HH:MM:SS)[/size]'
-                haling: 'center'
-                markup: True
-            TextInput:
-                id: txt_init_time
-                size_hint: (1,0.8)
-                halign: 'center'
-                valign: 'middle'
-                multiline: False
-            Label:
-                text: 'Timestamp final \r\n [size=12] (DD/MM/AAAA HH:MM:SS)[/size]'
-                haling: 'center'
-                markup: True                    
-            TextInput:
-                id: txt_final_time
-                size_hint: (1,0.8)
-                halign: 'center'
-                valign: 'middle'
-                multiline: False
+            size_hint: (1,0.05)
+            BoxLayout:
+                orientation:'horizontal'
+                size_hint: (0.5,1)
+                Label:
+                    size_hint: (0.3,1)
+                    text: "Numero de pontos do grafico"
+                LabeledCheckBoxHistoricalDataGraph:
+                    id: mp20
+                    on_kv_post:
+                        self.ids.label.text = '20'
+                        self.ids.checkbox.group = 'cb_group'
+                        self.ids.checkbox.active = True
+                LabeledCheckBoxHistoricalDataGraph:
+                    id: mp50
+                    on_kv_post:
+                        self.ids.label.text = '50'
+                        self.ids.checkbox.group = 'cb_group'
+                LabeledCheckBoxHistoricalDataGraph:
+                    id: mp100
+                    on_kv_post:
+                        self.ids.label.text = '100'
+                        self.ids.checkbox.group = 'cb_group'                
             Button:
                 text: "Fechar"
                 background_color: 1,0,0,1
-                size_hint:(1,0.8)
+                size_hint:(0.1,1)
                 on_release: root.dismiss()
 
 
 <LabeledCheckBoxHistoricalDataGraph>
     orientation:'horizontal'
-    size_hint: (0.05,1)
+    size_hint: (0.1,1)
     CheckBox:
         id: checkbox
-        on_active: app.root.getDataDB()
+        on_active: app.root._graph.ids.graph.setMaxPoints(int(label.text),0) if app.root is not None else None
     Label: 
-        id: label  
-        font_size: 12
-        bold: True   
+        id: label 
+
+<QueryHistoricalDataPopup>:
+    title: "Consulta de Dados Históricos"
+    size_hint: (0.8, 0.8)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Selecione o Intervalo de Tempo:"
+        TextInput:
+            id: start_time_input
+            hint_text: "Data Inicial (DD/MM/AAAA HH:MM:SS)"
+        TextInput:
+            id: end_time_input
+            hint_text: "Data Final (DD/MM/AAAA HH:MM:SS)"
+        Button:
+            text: "Buscar"
+            on_release: root.query_data()
+        Button:
+            text: "Fechar"
+            background_color: 1,0,0,1
+            on_release: root.dismiss()

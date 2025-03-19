@@ -33,8 +33,7 @@ class MainApp(App):
             'fp_s': {'addr': 869, 'float': False, 'mult': 1000, 'lista': False, 'ymax': 1.2, 'y_ticks_major': 0.1, 'unidade' : ''},
             'fp_t': {'addr': 870, 'float': False, 'mult': 1000, 'lista': False, 'ymax': 1.2, 'y_ticks_major': 0.1, 'unidade' : ''},
             'fp_tot': {'addr': 871, 'float': False, 'mult': 1000, 'lista': False, 'ymax': 1.2, 'y_ticks_major': 0.1, 'unidade' : ''}
-        },
-        db_path= "C:/Users/Arthur/Documents/GitHub/Informatica-Industrial/Informatica-Industrial-main/ClienteDB/db/scada.db"
+        }
         )
         return self._widget
     def on_stop(self):
@@ -45,9 +44,7 @@ class MainApp(App):
     
 if __name__ == '__main__':
     
-    Builder.load_string(open("Informatica-Industrial-main/ClienteDB/mainwidget.kv",encoding="utf-8").read(),rulesonly=True)
-    Builder.load_string(open("Informatica-Industrial-main/ClienteDB/popups.kv",encoding="utf-8").read(),rulesonly=True)
+    Builder.load_string(open("Informatica-Industrial-main/ClienteBDTerminal/mainwidget.kv",encoding="utf-8").read(),rulesonly=True)
+    Builder.load_string(open("Informatica-Industrial-main/ClienteBDTerminal/popups.kv",encoding="utf-8").read(),rulesonly=True)
 
     MainApp().run()
-
-    #erro:  ('near "sensores": syntax error',)
