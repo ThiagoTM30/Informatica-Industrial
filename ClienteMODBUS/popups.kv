@@ -70,10 +70,250 @@
                 height: 40
                 text: "Configurar"
                 on_release:
-                    app.root.scan_time = int(txt_st.text)
+                    app.root._scan_time = int(txt_st.text)
             Button:
                 size_hint_y: None
                 height: 40
                 text: "Fechar"
                 on_release:
                     root.dismiss()
+
+<AtuacaoPopup>:
+    title: "Atuação e controle na planta"
+    size_hint_y: None
+    size_hint_x: 1
+    height:350
+    BoxLayout:
+        id: partidas
+        orientation: 'vertical'
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint: (1,0.2)
+            CheckBox:
+                on_active: 
+                    app.root._addrPartida = 1319
+                group: 'partida_group'
+            Label:
+                text: "PARTIDA DIRETA"    
+            CheckBox:
+                on_active: 
+                    app.root._addrPartida = 1316
+                group: 'partida_group'
+
+            Label:
+                text: "SOFT START"
+                
+            CheckBox:
+                on_active: 
+                    app.root._addrPartida = 1312
+                group: 'partida_group'
+            Label:
+                text: "INVERSOR"
+                
+
+        GridLayout:
+            cols:4
+            size_hint: (1,0.2)
+            Label:
+                text: "ACELERAÇÃO"
+            TextInput:
+                id: acel_st
+                font_size: 14
+                halign:'center'
+                valign: 'middle'    
+        
+            Label:
+                text: "DESACELERAÇÃO"
+            TextInput:
+                id: desacel_st
+                font_size: 14
+                halign:'center'
+                valign: 'middle'
+        BoxLayout:
+            orientation:'vertical'
+            Label:
+                size_hint: (1,1)
+                text: 'Frequência (exclusivo do inversor): ' + str(slider_vel.value) + ' Hz'
+            Slider:
+                id: slider_vel
+                min: 0
+                max: 60   
+                value: 0  # Valor inicial = 0 Hz
+                step: 1   # Passo de 1 Hz (opcional, para "travar" em valores inteiros)             
+                on_touch_move: 
+                    app.root.defineVel(int((slider_vel.value)))  # Usa valor arredondado
+                #    root._vel[1] = int((slider_vel.value)) * root._vel[1]/abs(root._vel[1])
+        BoxLayout:
+            size_hint: (1,0.15)
+            canvas:
+                Color:
+                    rgb: 1,0,0
+            Button:
+                text: "APLICAR"
+                #on_release:
+                #    app.root.acionamento()
+            Button:              
+                text: "FECHAR"
+                on_release:
+                    root.dismiss()
+<DataGraphPopup>
+    title: root.title
+    BoxLayout:
+        orientation:'vertical'
+        TimeSeriesGraph:
+            id: graph
+            xlabel: 'Horario'
+            ylabel: root.ylabel
+            background_color: 0.5,0.5,0.5,0.5
+            x_ticks_minor: 1
+            x_ticks_major: 5
+            y_grid_label: True
+            x_grid_label: True
+            padding: 5
+            x_grid: True
+            y_grid: True
+            xmin : 0 
+            ymin : 0
+
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint: (1,0.05)
+            BoxLayout:
+                orientation:'horizontal'
+                size_hint: (0.5,1)
+                Label:
+                    size_hint: (0.3,1)
+                    text: "Numero de pontos do grafico"
+                LabeledCheckBoxDataGraph:
+                    id: mp20
+                    graph_reference: root
+                    on_kv_post:
+                        self.ids.label.text = '20'
+                        self.ids.checkbox.group = 'cb_group'
+                        self.ids.checkbox.active = True
+                LabeledCheckBoxDataGraph:
+                    id: mp50
+                    graph_reference: root
+                    on_kv_post:
+                        self.ids.label.text = '50'
+                        self.ids.checkbox.group = 'cb_group'
+                LabeledCheckBoxDataGraph:
+                    id: mp100
+                    graph_reference: root
+                    on_kv_post:
+                        self.ids.label.text = '100'
+                        self.ids.checkbox.group = 'cb_group'                
+            Button:
+                text: "Fechar"
+                background_color: 1,0,0,1
+                size_hint:(0.1,1)
+                on_release: root.dismiss()
+
+
+<LabeledCheckBoxDataGraph>:
+    orientation:'horizontal'
+    size_hint: (0.1,1)
+    CheckBox:
+        id: checkbox
+        on_active: 
+            root.graph_reference.ids.graph.setMaxPoints(int(label.text),0) if root.graph_reference else None
+    Label: 
+        id: label      
+
+<HistoricalDataGraphPopup>
+    title: "Gráfico de Monitoramento Dados Históricos"
+    BoxLayout:
+        orientation:'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: "40dp"
+            padding: "5dp"
+            spacing: "5dp"
+            Label:
+                text: "Variável:"
+                size_hint_x: None
+                width: "60dp"
+            Spinner:
+                id: spinner
+                text: "Lista de Variaveis"
+                values: []
+                on_text: root.on_spinner_select(self.text)
+            
+
+        TimeSeriesGraph:
+            id: graph
+            xlabel: 'Horario'
+            ylabel: ''
+            background_color: 0.5,0.5,0.5,0.5
+            x_ticks_minor: 1
+            x_ticks_major: 5
+            y_grid_label: True
+            x_grid_label: True
+            padding: 5
+            x_grid: True
+            y_grid: True
+            xmin : 0 
+            ymin : 0
+
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint: (1,0.05)
+            BoxLayout:
+                orientation:'horizontal'
+                size_hint: (0.5,1)
+                Label:
+                    size_hint: (0.3,1)
+                    text: "Numero de pontos do grafico"
+                LabeledCheckBoxHistoricalDataGraph:
+                    id: mp20
+                    on_kv_post:
+                        self.ids.label.text = '20'
+                        self.ids.checkbox.group = 'cb_group'
+                        self.ids.checkbox.active = True
+                LabeledCheckBoxHistoricalDataGraph:
+                    id: mp50
+                    on_kv_post:
+                        self.ids.label.text = '50'
+                        self.ids.checkbox.group = 'cb_group'
+                LabeledCheckBoxHistoricalDataGraph:
+                    id: mp100
+                    on_kv_post:
+                        self.ids.label.text = '100'
+                        self.ids.checkbox.group = 'cb_group'                
+            Button:
+                text: "Fechar"
+                background_color: 1,0,0,1
+                size_hint:(0.1,1)
+                on_release: root.dismiss()
+
+
+<LabeledCheckBoxHistoricalDataGraph>
+    orientation:'horizontal'
+    size_hint: (0.1,1)
+    CheckBox:
+        id: checkbox
+        on_active: app.root._graph.ids.graph.setMaxPoints(int(label.text),0) if app.root is not None else None
+    Label: 
+        id: label 
+
+<QueryHistoricalDataPopup>:
+    title: "Consulta de Dados Históricos"
+    size_hint: (0.8, 0.8)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Selecione o Intervalo de Tempo:"
+        TextInput:
+            id: start_time_input
+            hint_text: "Data Inicial (DD/MM/AAAA HH:MM:SS)"
+        TextInput:
+            id: end_time_input
+            hint_text: "Data Final (DD/MM/AAAA HH:MM:SS)"
+        Button:
+            text: "Buscar"
+            on_release: root.query_data()
+        Button:
+            text: "Fechar"
+            background_color: 1,0,0,1
+            on_release: root.dismiss()
