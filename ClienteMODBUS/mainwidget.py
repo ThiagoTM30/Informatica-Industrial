@@ -8,6 +8,10 @@ import random
 from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 from pymodbus.constants import Endian
 from datetime import datetime
+from kivy.properties import ListProperty
+
+class BoxAlerta(BoxLayout):
+    corAlerta = ListProperty([1, 1, 1, 0.2])
 
 class MainWidget(BoxLayout):
     """
@@ -28,6 +32,7 @@ class MainWidget(BoxLayout):
         self._scanPopup = ScanPopup(scantime= self._scan_time)
         self._atuacaoPopup = AtuacaoPopup()
         self._modbusClient = ModbusClient(host=self._serverIP,port=self._serverPort)
+        self._addrPartida= None
         self._meas = {}
         self._meas['timestamp'] = None
         self._meas['values'] = {}
@@ -45,6 +50,7 @@ class MainWidget(BoxLayout):
         inicializar uma thread para a leitura dos dados e atualizaçao da interface 
         gráfica
         """
+        self._addrPartida = 1319 if self._addrPartida is None else self._addrPartida
         self._serverIP = ip
         self._serverPort = port
         self._modbusClient.host = self._serverIP
@@ -75,14 +81,13 @@ class MainWidget(BoxLayout):
                 self._meas['values'][key] = self.readLista(value['addr']) * value['mult']
             else: 
                 self._meas['values'][key] = self.readInt(value['addr']) / value['mult']
-        print(self._meas)
     
     def readFloat(self,addr):
         """  
         Método auxiliar para a leitura de valores com ponto flutuante
         """
         leitura = self._modbusClient.read_holding_registers (addr,2)
-        decoder = BinaryPayloadDecoder.fromRegisters(leitura, byteorder=Endian.Big, wordorder=Endian.Little)
+        decoder = BinaryPayloadDecoder.fromRegisters(leitura, byteorder=Endian.Big, wordorder=Endian.Big)
         return decoder.decode_32bit_float()  
     
     def readLista(self, addr):
@@ -127,6 +132,53 @@ class MainWidget(BoxLayout):
                 
         #Atualização do Nivel da Agua
         self.ids.lb_nivel.size = (self.ids.lb_nivel.size[0],(self._meas['values']['nivel']/100)*50) #Acessa o widget lb_nivel no .kv
+        
+         #Atualização da Medida da Pressao
+        self.ids.lb_pressao.size = ((self._meas['values']['pressao']/420)*85,self.ids.lb_pressao.size[1]) #Acessa o widget lb_nivel no .kv
+        
+        #Atualiza o visor de apoio ao acionamento de motor
+        self.atualizaVisor(self._addrPartida)
+        
+        #Atualiza a cor dos triângulos de alerta
+        self.mudaCor()
+    
+    def atualizaVisor(self,addr):
+        """ 
+        Método que modifica a string mostrada no visor
+        """
+        if addr == 1312:
+            self.ids.visor_part.text = 'Inversor'
+        elif addr == 1316:
+            self.ids.visor_part.text = 'Soft-start'
+        elif addr == 1319:
+            self.ids.visor_part.text = 'Partida Direta'
 
     def stopRefresh(self):
         self._updateWidgets = False
+    
+    def ligaMotor(self,addr):
+        """
+        Aciona a partida do motor selecionado
+        """
+        self._modbusClient.write_single_register(addr,1)
+    
+    def desligaMotor(self,addr):
+        """ 
+        Desliga o motor selecionado
+        """
+        self._modbusClient.write_single_register(addr,0)
+        
+    def defineVel(self, vel):
+        """
+        Define a frequência do inversor
+        """
+        if self._addrPartida == 1312:
+            self._modbusClient.write_single_register(1313,vel)
+    
+    def mudaCor(self):
+        for key, value in self._tags.items():
+            if key in self.ids and key in self._meas['values']:  # Verifica se o ID e a chave existem
+                id_correto = f"alerta_{key}"
+                self.ids[id_correto].corAlerta = (1,self.ids[id_correto].pos[0]/800 , self.ids[id_correto].pos[1] / 500, 1)
+                
+                

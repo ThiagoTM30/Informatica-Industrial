@@ -1,5 +1,3 @@
-##adicionei a finalização da thread secundária e arrumei o scantime
-
 from kivy.app import App
 from mainwidget import MainWidget
 from kivy.lang.builder import Builder

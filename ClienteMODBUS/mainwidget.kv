@@ -72,7 +72,7 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':0.085,'y':0.182} #variam de -0.5 ate 0.5
+            pos_hint: {'x':-0.032,'y':0.172} #variam de -0.5 ate 0.5
             color: 0,0,0
 
         Label: #FIT-01(Vazão) Auxiliar
@@ -81,9 +81,8 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':0.130,'y':0.182} #variam de -0.5 ate 0.5
+            pos_hint: {'x':0.01,'y':0.172} #variam de -0.5 ate 0.5
             color: 0,0,0
-
 
         Label: #LIT-01(Nível)
             id: nivel 
@@ -91,7 +90,7 @@
             font_size: 15
             bold: True
             halign: 'center'
-            pos_hint: {'x':0.382,'y':0.334} #variam de -0.5 ate 0.5
+            pos_hint: {'x':0.384,'y':0.334} #variam de -0.5 ate 0.5
             color: 0,0,0
 
         Label: #LIT-01(Nível) Auxiliar
@@ -107,7 +106,7 @@
             id: lb_nivel
             size_hint:(None,None)
             size: (16,50)
-            pos_hint:{'x':0.903,'y':0.695} #posiçao na tela
+            pos_hint:{'x':0.912,'y':0.698} #posiçao na tela
             canvas:
                 Color:
                     rgb: 0,0,1
@@ -147,9 +146,106 @@
             halign: 'center'
             pos_hint: {'x':-0.436,'y':-0.382} #variam de -0.5 ate 0.5
             color: 0,0,0  
+
+        Label: #Nivel dinâmico Pressao
+            id: lb_pressao
+            size_hint:(None,None)
+            size: (85,20)
+            pos_hint:{'x':0.085,'y':0.516} #posiçao na tela
+        #     canvas:
+        #         Color:
+        #             rgb: 1,0,0
+        #         Rectangle:
+        #             size: self.size
+        #             pos: (127,400) #calcular a posicao central do label
+        # Image:
+        #     id: regua
+        #     source: '../imgs/regua.png'
+        #     size_hint: 0.17,0.17
+        #     pos_hint: lb_pressao.pos_hint
+
+        
+
+        Label: #Nivel dinâmico Vazao
+            id: lb_vazao
+            size_hint:(None,None)
+            size: (85,20)
+            pos_hint:{'x':0.386,'y':0.545} #posiçao na tela
+            canvas:
+                Color:
+                    rgb: 1,0,0
+                Rectangle:
+                    size: self.size
+                    pos: (428,420) #calcular a posicao central do label
+        Image:
+            id: regua
+            source: '../imgs/regua.png'
+            size_hint: 0.17,0.17
+            pos_hint: lb_vazao.pos_hint
+
         Button:
             size_hint: (None, None)
             text: 'Atuação'
             size: (200, 58)
             pos_hint: {'x': 0.75, 'y': 0}  # 40% da largura e 50% da altura do layout pai
             on_release: root._atuacaoPopup.open()
+        
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint: (None, None)
+            size:(200,30)
+            pos_hint: {'x': 0, 'y': 0.32}
+            Button:
+                text:'LIGA'
+                on_release:
+                    root.ligaMotor(app.root._addrPartida)
+            Button:
+                text:'DESLIGA'
+                on_release:
+                    root.desligaMotor(app.root._addrPartida)
+            Button:
+                size_hint: (0.3,1)
+                size: 30,30
+                on_release: root._atuacaoPopup.open()
+                Image:
+                    source: '../imgs/engrenagem.png'
+                    size_hint: None, None
+                    size: 20, 20
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+        
+        Label: #Visor de seleção do motor
+            id: visor_part
+            text: '-.-'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x': -0.385, 'y': -0.2} #variam de -0.5 ate 0.5
+            color: 0,0,0,1
+        
+        BoxAlerta:
+            id: alerta_vazao
+            pos: (500, 370)
+        BoxAlerta:
+            id: alerta_pressao
+            pos: (200, 350)
+        BoxAlerta:
+            id: alerta_nivel
+            pos: (760, 460)
+        BoxAlerta:
+            id: alerta_torque
+            pos: (40, 100)
+        BoxAlerta:
+            id: alerta_rot_rpm
+            pos: (140, 100)
+
+
+<BoxAlerta@BoxLayout>:
+    size_hint: (None, None)
+    size: (15, 15)
+    corAlerta: (1, 1, 1, 0.2)  # Defina um valor padrão ou deixe ele ser alterado pelo Python
+    canvas:
+        Color:
+            rgba: root.corAlerta  # A cor será acessada aqui
+        Triangle:
+            points: [self.pos[0], self.pos[1], self.pos[0] + self.size[0], self.pos[1], self.pos[0] + self.size[0]/2, self.pos[1] + self.size[1]]
