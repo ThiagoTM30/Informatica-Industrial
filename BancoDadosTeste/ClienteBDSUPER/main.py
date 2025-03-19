@@ -28,7 +28,7 @@ class MainApp(App):
             'pot_r': {'addr': 852, 'float': False, 'mult': 1, 'lista': False, 'ymax': 500, 'y_ticks_major': 100, 'unidade' : 'W'},
             'pot_s': {'addr': 853, 'float': False, 'mult': 1, 'lista': False, 'ymax': 500, 'y_ticks_major': 100, 'unidade' : 'W'},
             'pot_t': {'addr': 854, 'float': False, 'mult': 1, 'lista': False, 'ymax': 500, 'y_ticks_major': 100, 'unidade' : 'W'},
-            'pot_total': {'addr': 855, 'float': False, 'mult': 1, 'lista': False, 'ymax': 1.2, 'y_ticks_major': 0.1, 'unidade' : 'W'},
+            'pot_total': {'addr': 855, 'float': False, 'mult': 1, 'lista': False, 'ymax': 500, 'y_ticks_major': 100, 'unidade' : 'W'},
             'fp_r': {'addr': 868, 'float': False, 'mult': 1000, 'lista': False, 'ymax': 1.2, 'y_ticks_major': 0.1, 'unidade' : ''},
             'fp_s': {'addr': 869, 'float': False, 'mult': 1000, 'lista': False, 'ymax': 1.2, 'y_ticks_major': 0.1, 'unidade' : ''},
             'fp_t': {'addr': 870, 'float': False, 'mult': 1000, 'lista': False, 'ymax': 1.2, 'y_ticks_major': 0.1, 'unidade' : ''},

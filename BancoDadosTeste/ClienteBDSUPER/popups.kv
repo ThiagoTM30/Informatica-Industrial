@@ -79,54 +79,44 @@
                     root.dismiss()
 <AtuacaoPopup>:
     title: "Atuação e controle na planta"
-    size_hint_y: 1
+    size_hint_y: None
     size_hint_x: 1
-    height: 200
+    height:350
     BoxLayout:
         id: partidas
         orientation: 'vertical'
         BoxLayout:
             orientation:'horizontal'
-            size_hint: (1,0.1)
+            size_hint: (1,0.2)
             CheckBox:
-                on_active: root.on_checkbox_active(self, self.active)
+                on_active: 
+                    app.root._addrPartida = 1319
+                group: 'partida_group'
             Label:
-                text: "PARTIDA DIRETA"
-    
+                text: "PARTIDA DIRETA"    
             CheckBox:
-                on_active: root.on_checkbox_active(self, self.active)
+                on_active: 
+                    app.root._addrPartida = 1316
+                group: 'partida_group'
 
             Label:
                 text: "SOFT START"
-
+                
             CheckBox:
-                on_active: root.on_checkbox_active(self, self.active)
+                on_active: 
+                    app.root._addrPartida = 1312
+                group: 'partida_group'
             Label:
                 text: "INVERSOR"
-        
-        BoxLayout:
-            orientation:'vertical'
-            id: partidas
-            size_hint: (1,0.8)
-            Button:
-                text: "LIGA"
-                on_release:
-                    root.dismiss()
-            Button:
-                text: "DESLIGA"
-                on_release:
-                    root.dismiss()
-            Button:
-                text: "RESET"
-                on_release:
-                    root.dismiss()
+                
 
         GridLayout:
             cols:4
-            size_hint: (1,0.1)
+            size_hint: (1,0.2)
             Label:
                 text: "ACELERAÇÃO"
             TextInput:
+                id: acel_st
                 font_size: 14
                 halign:'center'
                 valign: 'middle'    
@@ -134,17 +124,34 @@
             Label:
                 text: "DESACELERAÇÃO"
             TextInput:
-                id: txt_st
+                id: desacel_st
                 font_size: 14
                 halign:'center'
                 valign: 'middle'
         BoxLayout:
-            size_hint: (1,0.1)
+            orientation:'vertical'
+            Label:
+                size_hint: (1,1)
+                text: 'Frequência (exclusivo do inversor): ' + str(slider_vel.value) + ' Hz'
+            Slider:
+                id: slider_vel
+                min: 0
+                max: 60   
+                value: 0  # Valor inicial = 0 Hz
+                step: 1   # Passo de 1 Hz (opcional, para "travar" em valores inteiros)             
+                on_touch_move: 
+                    app.root.defineVel(int((slider_vel.value)))  # Usa valor arredondado
+                #    root._vel[1] = int((slider_vel.value)) * root._vel[1]/abs(root._vel[1])
+        BoxLayout:
+            size_hint: (1,0.15)
             canvas:
                 Color:
                     rgb: 1,0,0
             Button:
-              
+                text: "APLICAR"
+                #on_release:
+                #    app.root.acionamento()
+            Button:              
                 text: "FECHAR"
                 on_release:
                     root.dismiss()

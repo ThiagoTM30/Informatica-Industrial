@@ -14,8 +14,6 @@ from datetime import datetime
 from timeseriesgraph import TimeSeriesGraph
 
 
-#correto ok!
-
 class ModbusPopup(Popup):
     """
     Popup da configuração do protocolo MODBUS

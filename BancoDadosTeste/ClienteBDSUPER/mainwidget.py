@@ -12,8 +12,10 @@ from timeseriesgraph import TimeSeriesGraph
 from sqlalchemy.orm import sessionmaker
 from db import engine, Base
 from models import DadoCLP
+from kivy.properties import ListProperty
 
-#não apagar ok
+class BoxAlerta(BoxLayout):
+    corAlerta = ListProperty([1, 1, 1, 0.2])
 
 class MainWidget(BoxLayout):
     """
@@ -38,6 +40,7 @@ class MainWidget(BoxLayout):
         self._meas = {}
         self._meas['timestamp'] = None
         self._meas['values'] = {}
+        self._addrPartida = 1319
 
         for key, value in kwargs.get('modbus_addr').items():
             if key == 'torque':
@@ -63,6 +66,7 @@ class MainWidget(BoxLayout):
         inicializar uma thread para a leitura dos dados e atualizaçao da interface 
         gráfica
         """
+        self._addrPartida = 1319 if self._addrPartida is None else self._addrPartida
         self._serverIP = ip
         self._serverPort = port
         self._modbusClient.host = self._serverIP
@@ -163,6 +167,12 @@ class MainWidget(BoxLayout):
         #Atualização do Nivel da Agua
         self.ids.lb_nivel.size = (self.ids.lb_nivel.size[0],(self._meas['values']['nivel']/100)*50) #Acessa o widget lb_nivel no .kv
 
+        #Atualização da Medida da Pressao
+        self.ids.lb_pressao.size = ((self._meas['values']['pressao']/420)*85,self.ids.lb_pressao.size[1]) #Acessa o widget lb_nivel no .kv
+        
+        #Atualização da Medida da Vazão
+        self.ids.lb_vazao.size = ((self._meas['values']['vazao']/420)*85,self.ids.lb_vazao.size[1]) #Acessa o widget lb_nivel no .kv
+
         #Atualição do Grafico tempo real
         self._torque_graph.ids.graph.updateGraph((self._meas['timestamp'], self._meas['values']['torque']), 0) 
         self._nivel_graph.ids.graph.updateGraph((self._meas['timestamp'], self._meas['values']['nivel']), 0)
@@ -182,5 +192,47 @@ class MainWidget(BoxLayout):
                 bit_value = sensor_values[bit_index]
                 self._graph.ids.graph.updateGraph((self._meas['timestamp'], bit_value), 0)
 
+        #Atualiza o visor de apoio ao acionamento de motor
+        self.atualizaVisor(self._addrPartida)
+        
+        #Atualiza a cor dos triângulos de alerta
+        self.mudaCor()        
+
+    def atualizaVisor(self,addr):
+        """ 
+        Método que modifica a string mostrada no visor
+        """
+        if addr == 1312:
+            self.ids.visor_part.text = 'Inversor'
+        elif addr == 1316:
+            self.ids.visor_part.text = 'Soft-start'
+        elif addr == 1319:
+            self.ids.visor_part.text = 'Partida Direta'
+
     def stopRefresh(self):
         self._updateWidgets = False
+
+    def ligaMotor(self,addr):
+        """
+        Aciona a partida do motor selecionado
+        """
+        self._modbusClient.write_single_register(addr,1)
+    
+    def desligaMotor(self,addr):
+        """ 
+        Desliga o motor selecionado
+        """
+        self._modbusClient.write_single_register(addr,0)
+        
+    def defineVel(self, vel):
+        """
+        Define a frequência do inversor
+        """
+        if self._addrPartida == 1312:
+            self._modbusClient.write_single_register(1313,vel)
+    
+    def mudaCor(self):
+        for key, value in self._tags.items():
+            if key in self.ids and key in self._meas['values']:  # Verifica se o ID e a chave existem
+                id_correto = f"alerta_{key}"
+                self.ids[id_correto].corAlerta = (1,self.ids[id_correto].pos[0]/800 , self.ids[id_correto].pos[1] / 500, 1)    
