@@ -1,0 +1,209 @@
+#:kivy 1.11.1
+
+<MainWidget>:
+    orientation: 'vertical'
+    canvas:
+        Color:
+            rgb: 0.5,0.5,0.5
+        Rectangle:
+            size: self.size
+    BoxLayout:
+        orientation:'horizontal'
+        size_hint: (1,0.1)
+        spacing: 10
+        Label:
+            text: 'Supervisório Bomba Hidraulica'
+            size_hint_x: None
+            width: 400  #largura do texto
+        BoxLayout:
+            orientation:'vertical'
+            size_hint_x: None
+            width: 500  
+            Label: 
+                text: 'Configurações'
+            BoxLayout:
+                orientation:'horizontal'
+                Button:
+                    text: 'MODBUS'
+                    on_release: root._modbusPopup.open()
+                Button:
+                    text: 'Scan Time' #tempo de varredura
+                    on_release: root._scanPopup.open()
+        Image:
+        #imagem de conexao estabelecida
+            id: img_con
+            size_hint_x: None
+            width: 80 #largura em pixels
+            source: 'imgs/desconectado.png'
+            pos_hint: {'top':1, 'right':1}
+
+    FloatLayout:
+    #imagem da simulaçao da bomba
+        canvas:
+            Color:
+                rgba: 1,1,1,0.8
+            Rectangle:
+                size: self.size
+
+        Image:
+            source: 'imgs/bomba.png' #olhar certinho se os nomes batem
+
+        Button:
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: 'imgs/graph_icon.jpg'
+            background_down: 'imgs/graph_icon.jpg'
+            pos_hint: {'x':0.3,'y':0.1}  # Posição ajustada para não sobrepor
+            on_release: root._vazao_graph.open()
+
+        Button:
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: 'imgs/graph_icon.jpg'
+            background_down: 'imgs/graph_icon.jpg'
+            pos_hint: {'x':0.4,'y':0.1}  # Posição ajustada para não sobrepor
+            on_release: root._pressao_graph.open()
+
+        Button:
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: 'imgs/graph_icon.jpg'
+            background_down: 'imgs/graph_icon.jpg'
+            pos_hint: {'x':0.5,'y':0.1}  # Posição ajustada para não sobrepor
+            on_release: root._nivel_graph.open()
+                
+        Button:
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: 'imgs/graph_icon.jpg'
+            background_down: 'imgs/graph_icon.jpg'
+            pos_hint: {'x':0.6,'y':0.1}  # Posição ajustada para não sobrepor
+            on_release: root._torque_graph.open()
+
+        Button:
+            size_hint: (None,None)
+            size: (0.65*62,0.65*58)
+            background_normal: 'imgs/graph_icon.jpg'
+            background_down: 'imgs/graph_icon.jpg'
+            pos_hint: {'x':0.7,'y':0.1}  # Posição ajustada para não sobrepor
+            on_release: root._rot_rpm_graph.open()       
+        
+        Label: #PIT-01(Pressão)
+            id: pressao 
+            text:'-.-'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.331,'y':0.138} #variam de -0.5 ate 0.5
+            color: 0,0,0,1
+
+        Label: #PIT-01(Pressão) Auxiliar
+            id: pressao_aux
+            text:'Kgf/cm²'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.276,'y':0.138} #variam de -0.5 ate 0.5
+            color: 0,0,0,1            
+
+        Label: #FIT-01(Vazão)
+            id: vazao 
+            text:'-.-'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':0.085,'y':0.182} #variam de -0.5 ate 0.5
+            color: 0,0,0
+
+        Label: #FIT-01(Vazão) Auxiliar
+            id: vazao_aux 
+            text:'m²/h'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':0.130,'y':0.182} #variam de -0.5 ate 0.5
+            color: 0,0,0
+
+
+        Label: #LIT-01(Nível)
+            id: nivel 
+            text:'-.-'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':0.382,'y':0.334} #variam de -0.5 ate 0.5
+            color: 0,0,0
+
+        Label: #LIT-01(Nível) Auxiliar
+            id: nivel_aux
+            text:'%'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':0.412,'y':0.334} #variam de -0.5 ate 0.5
+            color: 0,0,0
+        
+        Label: #Nivel dinâmico
+            id: lb_nivel
+            size_hint:(None,None)
+            size: (16,50)
+            pos_hint:{'x':0.903,'y':0.695} #posiçao na tela
+            canvas:
+                Color:
+                    rgb: 0,0,1
+                Rectangle:
+                    size: self.size
+                    pos: (self.pos[0]+self.width*1,self.pos[1]) #calcular a posicao central do label
+
+        Label: #Rotação
+            id: rot_rpm 
+            text:'-.-'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.336,'y':-0.372} #variam de -0.5 ate 0.5
+            color: 0,0,0
+        Label: #Rotação Auxiliar
+            id: rot_rpm_aux
+            text: '\nRPM'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.336,'y':-0.382} #variam de -0.5 ate 0.5
+            color: 0,0,0
+        Label: #Torque
+            id: torque 
+            text:'-.-'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.436,'y':-0.372} #variam de -0.5 ate 0.5
+            color: 0,0,0
+        Label: #Torque Auxiliar
+            id: torque_aux
+            text:'\nN.m'
+            font_size: 15
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.436,'y':-0.382} #variam de -0.5 ate 0.5
+            color: 0,0,0  
+        Button:
+            size_hint: (None, None)
+            text: 'Atuação'
+            size: (200, 58)
+            pos_hint: {'x': 0.75, 'y': 0}  # 40% da largura e 50% da altura do layout pai
+            on_release: root._atuacaoPopup.open()
+
+        Button:
+            size_hint: (None, None)
+            text: 'Consultar Dados Históricos'
+            size: (250, 58)
+            pos_hint: {'x': 0.75, 'y': 0.1}
+            on_release: root._queryPopup.open()            
+
+        Button:
+            size_hint: (None, None)
+            text: 'Dados Todas Variaveis'
+            size: (200, 58)
+            pos_hint: {'x': 0.75, 'y': 0.2}  # 40% da largura e 50% da altura do layout pai
+            on_release: root._graph.open()    
