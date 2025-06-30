@@ -3,7 +3,7 @@ from mainwidget import MainWidget
 from kivy.lang.builder import Builder
 
 
-class MainApp(App):
+class MainApp3(App):
     """
     classe com o aplicativo
     """
